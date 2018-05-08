@@ -1,0 +1,44 @@
+docker-compose -f zookeeper.yaml up -d
+docker-compose -f zookeeper.yaml -f kafka.yaml up -d
+docker-compose -f zookeeper.yaml -f kafka.yaml -f orderer.yaml up -d
+docker-compose -f peer0.org1.yaml up -d
+docker-compose -f peer0.org2.yaml up -d
+docker-compose -f peer1.org1.yaml up -d
+docker-compose -f peer1.org2.yaml up -d
+docker-compose -f zookeeper.yaml -f kafka.yaml -f orderer.yaml -f peer0.org1.yaml -f peer0.org2.yaml -f peer1.org1.yaml -f peer1.org2.yaml -f cli.yaml up -d
+
+
+
+
+
+gcloud compute scp --recurse ~/cluster/* fabric1:~/cluster/
+
+
+# How to run on ubuntu 16.04
+
+## install docker and docker-compose
+
+https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-using-the-convenience-script
+curl -fsSL get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
+sudo usermod -aG docker ${USER}
+groups $USER
+
+sudo curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+
+
+## install go 1.10 on ubuntu
+
+https://github.com/golang/go/wiki/Ubuntu
+
+## get source code
+
+go get -u github.com/hyperledger/fabric/...
+go get -u github.com/kardianos/govendor
+
+## change FABRIC_ROOT in generateArtifacts.sh
+
+export FABRIC_ROOT=$GOPATH/src/github.com/hyperledger/fabric
